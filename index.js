@@ -34,12 +34,12 @@ function px2Loader(source)
  */
 function replaceSource(source, options)
 {
-    const rawList = source.match(/[^\s,/:]+px/g);    // 提取
-    const list = Array.from(new Set(rawList));       // 去重
-    const map = new Map();                           // 存储
+    const rawList = source.match(/[^\sa-zA-Z,/:(]+px[\s\n),;/]{1}/g);    // 提取
+    const list = Array.from(new Set(rawList));                           // 去重
+    const map = new Map();                                               // 存储
     list.forEach(item =>
     {
-        const num = Number.parseFloat(item.replace(/px/, "")); // 移除单位转number
+        const num = Number.parseFloat(item.replace(/px.*/, ""));         // 移除单位转number
         const { unit } = options;
 
         let value = "";
@@ -56,8 +56,14 @@ function replaceSource(source, options)
     for (let v of map)
     {
         const [key, value] = v;
-        const regExp = new RegExp(key, "g"); // 动态规则
-        source = source.replace(regExp, value);
+        const regExpStr = key.replace(/\)/, "\\)");    // 正则字符转义
+        const regExp = new RegExp(regExpStr, "g");     // 生成动态规则
+        const matchList = source.match(regExp);        // 匹配结果
+        if (matchList)
+        {
+            const part = matchList[0].replace(/.+px/, value);    // 匹配结构替换单位与单位数值
+            source = source.replace(regExp, part);               // 修改源码
+        }
     }
 
     source = source.replace(/Px|PX/g, "px"); // PX|Px转小写

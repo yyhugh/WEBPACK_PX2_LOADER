@@ -16,7 +16,7 @@
 
 ## 引入方式
 
-**本地引入**
+**webpack.config.js中引入**
 
 ```js
 // webpack.config.js
@@ -56,7 +56,43 @@ const config =
         ]
     },
     // ...
-}
+};
+```
+
+**vue.config.js中引入**
+
+```js
+// vue.config.js
+const config =
+{
+    // ...
+    // 合并配置
+    configureWebpack: config =>
+    {
+        // 获取less文件处理配置
+        const lessRule = config.module.rules
+            .find(item => item.test.toString() === /\.less$/.toString()).oneOf
+            .find(item => item.resourceQuery.toString() === /\?vue/.toString()).use;
+            
+        // 获取less-loader所在下标
+        const lessLoaderIndex = lessRule
+            .findIndex(item => item.loader.includes("/node_modules/less-loader/dist/"));
+            
+        // px-loader执行顺序是在less-loader之后
+        lessRule.splice(lessLoaderIndex, 0,
+        {
+            loader: resolve("build/loaders/px2"),
+            options:
+            {
+                unit: "vh",       // 转换单位
+                planW: 1920,      // 设计稿宽度
+                planH: 1080,      // 设计稿高度
+                digit: 5          // 保留多少位小数
+            }
+        });
+    },
+    // ...
+};
 ```
 
 注意: 需要安装依赖`loader-utils`用于获取配置参数

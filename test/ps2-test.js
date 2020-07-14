@@ -38,7 +38,7 @@ function replaceSource(source, options)
 
     list.forEach(item =>
     {
-        const num = Number.parseFloat(item.match(/[^\sa-zA-Z,/:(]+/)[0]);   // 移除单位转number
+        const num = Number.parseFloat(item.match(/[^\sa-zA-Z,/:(]+/)[0]);  // 移除单位转number
 
         const { unit } = options;
 
@@ -58,14 +58,13 @@ function replaceSource(source, options)
     {
         const [key, value] = v;
         const regExpStr = key.replace(/\(/, "\\(").replace(/\)/, "\\)");    // 正则字符转义
-        const regExp = new RegExp("[^\\d\\.]{1}" + regExpStr, "g");           // 生成动态规则
-        console.log("regExp", regExp);
-        const matchList = source.match(regExp);        // 匹配结果
+        const regExp = new RegExp(`([^\\d\\.]{1})(${regExpStr})`, "g");     // 生成动态规则
+        const matchList = source.match(regExp);                             // 匹配结果
 
         if (matchList)
         {
-            const part = matchList[0].replace(/[^\sa-zA-Z,/:(]+px/, value);    // 匹配结构替换单位与单位数值
-            source = source.replace(regExp, part);                             // 修改源码
+            const part = matchList[0].replace(/.{1}[\d\.]+px/, value);      // 匹配结构替换单位与单位数值
+            source = source.replace(regExp, `$1${part}`);                   // 修改源码
         }
     }
 

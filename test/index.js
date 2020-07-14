@@ -24,13 +24,19 @@
 //     [f]: 700px 800px/900px;
 // `;
 
+// let source =
+// `
+//     [a]: 2px;
+//     b: 12Px;
+//     [c]: 12px;
+//     [d]:12px;
+//     [e]:2px;
+// `;
+
 let source =
 `
-    [a]: 2px;
-    b: 12Px;
-    [c]: 12px;
-    [d]:12px;
-    [e]:2px;
+    [f]: 700px 800px / 900px;
+    [f]: 700px 800px/900px;
 `;
 
 console.log("未处理前：", source);

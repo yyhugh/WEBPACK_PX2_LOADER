@@ -36,8 +36,6 @@ function replaceSource(source, options)
     const list = Array.from(new Set(rawList));                             // 去重
     const map = new Map();                                                 // 存储
 
-    console.log("rawList", rawList);
-
     list.forEach(item =>
     {
         const num = Number.parseFloat(item.match(/[^\sa-zA-Z,/:(]+/)[0]);   // 移除单位转number
@@ -55,17 +53,13 @@ function replaceSource(source, options)
         map.set(item, value);
     });
 
-    console.log("map", map);
-
     // 循环替换
     for (let v of map)
     {
         const [key, value] = v;
         const regExpStr = key.replace(/\(/, "\\(").replace(/\)/, "\\)");    // 正则字符转义
-        const regExp = new RegExp("[^\d\.]{1}" + regExpStr, "g");           // 生成动态规则
-
-        console.log("regExp", regExp); // ! 存在模糊匹配
-
+        const regExp = new RegExp("[^\\d\\.]{1}" + regExpStr, "g");           // 生成动态规则
+        console.log("regExp", regExp);
         const matchList = source.match(regExp);        // 匹配结果
 
         if (matchList)

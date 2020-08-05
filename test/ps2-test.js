@@ -32,7 +32,7 @@ function px2Loader(source)
  */
 function replaceSource(source, options)
 {
-    const rawList = source.match(/[^\sa-zA-Z,/:(]+px[\s\n),;/]{1}/g);      // 提取
+    const rawList = source.match(/[^\sa-zA-Z,/:(-]+px[\s\n),;/]{1}/g);      // 提取
     const list = Array.from(new Set(rawList));                             // 去重
     const map = new Map();                                                 // 存储
 
